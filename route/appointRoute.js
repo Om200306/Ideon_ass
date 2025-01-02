@@ -51,7 +51,7 @@ appointRouter.post("/slot/booking",roleCheck(["admin"]),async (req,res)=>{
 
 })
 
-appointRouter.get("/slot/:date" ,roleCheck(["admin" , "user"]), async(req , res)=>{
+appointRouter.get("/slot/:date" , async(req , res)=>{
 
      let date= req.params.date;
 
