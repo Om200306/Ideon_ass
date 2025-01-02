@@ -41,10 +41,37 @@ let authorize=(req,res,next)=>{
 
 }
 
+app.get("/profile", async (req, res) => {
+  const token = req.headers.authorization;
 
-app.use("/appointment",appointRouter)
+  try {
+    if (!token) {
+      return res.status(401).send("Token not provided");
+    }
+
+    const check = jwt.verify(token, process.env.SecretKey);
+
+    const user = await userModel.findOne({ _id: check.id });
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    console.error("Error occurred:", err);
+    
+    if (err.name === "JsonWebTokenError") {
+      return res.status(401).send("Invalid token");
+    }
+    
+    res.status(500).send("Internal server error");
+  }
+});
 
 
+
+app.use("/appointment",appointRouter);
 
 app.listen(process.env.PORT,async ()=>{
     try{
