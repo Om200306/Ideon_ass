@@ -26,7 +26,7 @@ appointRouter.get("/slot",async (req , res)=>{
 
 })
 
-appointRouter.post("/slot/booking",roleCheck(["admin","user"]),async (req,res)=>{
+appointRouter.post("/slot/booking",roleCheck(["admin"]),async (req,res)=>{
 
      let {date,day,startTime,endTime,isBooked,userId}=req.body;
 
@@ -115,7 +115,7 @@ appointRouter.patch("/bookSlot/:id", async (req, res) => {
 });
 
 
-appointRouter.delete("/bookSlot/:id", roleCheck(["admin","user"]),async (req, res) => {
+appointRouter.delete("/bookSlot/:id", roleCheck(["admin"]),async (req, res) => {
    const userId = req.params.id;
  
    try {
