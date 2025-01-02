@@ -80,18 +80,12 @@ appointRouter.get("/slot/:date" , async(req , res)=>{
 
 
 appointRouter.patch("/bookSlot/:id", async (req, res) => {
-  const token = req.headers.authorization;
+
   const userId = req.params.id;
 
-  if (!token) {
-    return res.status(401).send("Unauthorized: No token provided");
-  }
 
   try {
-   
-    const decoded = jwt.verify(token, process.env.SecretKey);
 
-   
     const data = await appointmentModel.findOne({ _id: userId });
 
     if (!data) {
@@ -100,7 +94,7 @@ appointRouter.patch("/bookSlot/:id", async (req, res) => {
 
     const updated = await appointmentModel.updateOne(
       { _id: userId },
-      { $set: { isBooked: !data.isBooked ,userId:decoded.id} }
+      { $set: { isBooked: !data.isBooked} }
     );
 
     if (updated.modifiedCount > 0) {
