@@ -5,6 +5,7 @@ const jwt= require("jsonwebtoken");
 const authRouter = require('./route/authRoute');
 const appointRouter = require('./route/appointRoute');
 const cors= require("cors");
+const { userModel } = require('./model/model');
 
 
 const app=express();
@@ -18,7 +19,7 @@ app.get("/",(req , res)=>{
 app.use("/api",authRouter);
 
 
-app.use((req,res,next)=>{
+let authorize=(req,res,next)=>{
 
   const token = req.headers.authorization;
 
@@ -38,10 +39,11 @@ app.use((req,res,next)=>{
     
   }
 
-})
+}
 
 
 app.use("/appointment",appointRouter)
+
 
 
 app.listen(process.env.PORT,async ()=>{
