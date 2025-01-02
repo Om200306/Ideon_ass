@@ -4,11 +4,12 @@ const connection = require('./dp/connection');
 const jwt= require("jsonwebtoken");
 const authRouter = require('./route/authRoute');
 const appointRouter = require('./route/appointRoute');
+const cors= require("cors");
 
 
 const app=express();
 app.use(express.json());
-
+app.use(cors());
 
 app.get("/",(req , res)=>{
     res.send("Welcome to Appintment booking app...")

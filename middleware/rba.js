@@ -12,13 +12,13 @@ const roleCheck = (roles) => (req, res, next) => {
   try {
     const decoded = jwt.verify(token, key);
 
-    // Check if the user's role matches the allowed roles
+   
     if (Array.isArray(roles) && roles.includes(decoded.role)) {
-      req.user = decoded; // Attach user info to the request for downstream use
-      return next(); // Proceed to the next middleware or route handler
+      req.user = decoded; 
+      return next(); 
     }
 
-    // If the role is not allowed, send a forbidden response
+   
     return res.status(403).send("Forbidden: Not allowed");
   } catch (err) {
     console.error("Error verifying token:", err.message);
