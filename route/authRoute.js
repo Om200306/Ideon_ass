@@ -23,7 +23,7 @@ authRouter.get("/all", async(req,res)=>{
 })
 
 authRouter.post("/signup",async (req,res)=>{
-    let {name ,email,password}= req.body;
+    let {name ,email,password ,role}= req.body;
 
     if(!name || !email || !password){
         return res.send("fill all the fields");
@@ -36,7 +36,7 @@ authRouter.post("/signup",async (req,res)=>{
         return res.status(400).send("already have accound");
        }
 
-       await userModel.create({name , email,password});
+       await userModel.create({name , email,password,role});
        res.status(201).send("Account created sucessfully");
 
   }
