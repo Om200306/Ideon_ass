@@ -27,6 +27,10 @@ const {Schema , model}= require("mongoose");
     userId:{
         type:String,
         default:"0"
+    },
+    adminId:{
+        type:String,
+        default:"0"
     }
     
    })

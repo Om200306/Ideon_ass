@@ -58,19 +58,24 @@ authRouter.post("/login",async (req , res)=>{
       try{
             let user= await userModel.findOne({email});
 
-            if(user){
+            if(!user){
+              return res.status(401).send("Invalid Credentials");
+            }
 
-              const token = jwt.sign(
-                { id: user._id, name: user.name , role:user.role},
-                process.env.SecretKey ,
-                { expiresIn: "1h" }
-            );
-
-                return res.status(201).send({message:"Login Sucessfully" , token});
+            if(user.password !== password){
+              return res.status(401).send("Invalid Credentials");
             }
 
 
-            return res.status(401).send("Invalid Credentials");
+            const token = jwt.sign(
+              { id: user._id, name: user.name , role:user.role},
+              process.env.SecretKey ,
+              { expiresIn: "1h" }
+          );
+
+              return res.status(201).send({message:"Login Sucessfully" , token});
+
+           
       }
       catch(err){
         console.log(err);

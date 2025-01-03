@@ -28,7 +28,11 @@ appointRouter.get("/slot",async (req , res)=>{
 
 appointRouter.post("/slot/booking",roleCheck(["admin"]),async (req,res)=>{
 
-     let {date,day,startTime,endTime,isBooked,userId}=req.body;
+  const token = req.headers.authorization;
+
+   const check = jwt.verify(token, process.env.SecretKey);
+
+     let {date,day,startTime,endTime,isBooked,userId,adminId=check.id}=req.body;
 
      if(!date || !day || !startTime || !endTime){
         return res.send("fill all the fields");
@@ -42,7 +46,7 @@ appointRouter.post("/slot/booking",roleCheck(["admin"]),async (req,res)=>{
             return res.status(400).send("this time slot is booked");
         }
 
-        await appointmentModel.create({date,day,startTime,endTime,isBooked,userId});
+        await appointmentModel.create({date,day,startTime,endTime,isBooked,userId,adminId});
            res.status(201).send("slot booked sucessfully");
      }
      catch(err){
@@ -82,7 +86,7 @@ appointRouter.get("/slot/:date" , async(req , res)=>{
 appointRouter.patch("/bookSlot/:id", async (req, res) => {
 
   const userId = req.params.id;
-
+  let {userNum}= req.body;
 
   try {
 
@@ -94,7 +98,7 @@ appointRouter.patch("/bookSlot/:id", async (req, res) => {
 
     const updated = await appointmentModel.updateOne(
       { _id: userId },
-      { $set: { isBooked: !data.isBooked} }
+      { $set: { isBooked: !data.isBooked ,userId:userNum} }
     );
 
     if (updated.modifiedCount > 0) {
@@ -108,6 +112,50 @@ appointRouter.patch("/bookSlot/:id", async (req, res) => {
   }
 });
 
+
+appointRouter.get("/byUser/:id", async (req ,res)=>{
+
+       const userid= req.params.id;
+  
+       try{
+
+          let data= await appointmentModel.find({userId:userid});
+
+          if(!data){
+            res.status(400).send("no data found");
+          }
+          
+            res.status(201).json(data);
+
+       }
+       catch(err){
+        console.log(err);
+        
+       }
+
+})
+
+appointRouter.get("/byAdmin/:id", async (req ,res)=>{
+
+  const adminid= req.params.id;
+
+  try{
+
+     let data= await appointmentModel.find({adminId:adminid});
+
+     if(!data){
+       res.status(400).send("no data found");
+     }
+     
+       res.status(201).json(data);
+
+  }
+  catch(err){
+   console.log(err);
+   
+  }
+
+})
 
 appointRouter.delete("/bookSlot/:id", roleCheck(["admin"]),async (req, res) => {
    const userId = req.params.id;
