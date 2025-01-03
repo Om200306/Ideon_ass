@@ -98,7 +98,7 @@ appointRouter.patch("/bookSlot/:id", async (req, res) => {
 
     const updated = await appointmentModel.updateOne(
       { _id: userId },
-      { $set: { isBooked: !data.isBooked ,userId:userNum} }
+      { $set: { isBooked: !data.isBooked ,userId: data.isBooked ? "0": userNum} }
     );
 
     if (updated.modifiedCount > 0) {
